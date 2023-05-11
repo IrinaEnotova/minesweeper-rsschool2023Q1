@@ -1,0 +1,96 @@
+/* COMMON */
+
+.hidden {
+  display: none;
+}
+
+* {
+  box-sizing: border-box;
+  color: #3B2A00;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+}
+
+.wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 20%;
+  height: 100%;
+  background: url('../img/sidebar-back.jpg') repeat;
+  background-size: 50%;
+}
+
+.main {
+  width: 80%;
+  height: 100%;
+  background-color: #E0A100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.main-heading {
+  text-align: center;
+}
+
+.btn {
+  display: block;
+  max-width: fit-content;
+  background-color: #C7B814;
+  border: none;
+  border-radius: 5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: box-shadow 0.3s ease-in;
+}
+
+.btn:hover {
+  box-shadow: 5px 2px 2px #3B2A00;
+}
+
+.start-btn {
+  font-size: 20px;
+  margin: 0 auto;
+  padding: 10px 25px;
+}
+
+.levels-container {
+  border: 2px solid #3B2A00;
+  border-radius: 10px;
+  width: fit-content;
+  margin: 0 auto;
+  padding: 15px 20px;
+  margin-top: 20px;
+}
+
+.add-heading {
+  text-align: center;
+  margin-block-start: 0;
+}
+
+.btns-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.level-btn {
+  margin: 0 auto;
+  padding: 10px 25px;
+}
+
+
+
+/* MAIN */
+
+.game-field {
+  width: 400px;
+  height: 400px;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #C7B814;
+}
