@@ -39,7 +39,7 @@
 
 .btn {
   display: block;
-  max-width: fit-content;
+  width: 200px;
   background-color: #C7B814;
   border: none;
   border-radius: 5px;
@@ -101,7 +101,11 @@
   border: 1px solid #3B2A00;
 }
 
+.cell {
+  cursor: pointer;
+}
+
 .bomb {
-  background: url('../img/bomb-icon.png') center center no-repeat;
+  background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;
   background-size: 30px;
 }

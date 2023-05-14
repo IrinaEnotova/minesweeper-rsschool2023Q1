@@ -68,8 +68,35 @@ function createBoard() {
     square.setAttribute('id', i);
     // присваеваем ячейкам класс, соответствующий номеру в перемешанном массиве
     square.classList.add(shuffledArray[i]);
+    square.classList.add('cell')
     field.append(square);
     squares.push(square);
+
+    // click
+    square.addEventListener('click', () => {
+      click(square);
+    })
+  }
+
+  // add numbers
+  for(let i = 0; i < squares.length; i++) {
+    let total = 0;
+    // определяем крайние ячейки
+    const isLeftEdge = i % width === 0;
+    const isRightEdge = i % width === width - 1;
+// тут нужно продумать варианты с другими размерами поля
+    if(squares[i].classList.contains('valid')) {
+      if(i > 0 && !isLeftEdge && squares[i-1].classList.contains('bomb')) total++;
+      if(i > 9 && !isRightEdge && squares[i+1 - width].classList.contains('bomb')) total++;
+      if(i > 10 && squares[i - width].classList.contains('bomb')) total++;
+      if(i > 11 && !isLeftEdge && squares[i-1 - width].classList.contains('bomb')) total++;
+      if(i < 98 && !isRightEdge && squares[i+1].classList.contains('bomb')) total++;
+      if(i < 90 && !isLeftEdge && squares[i-1 + width].classList.contains('bomb')) total++;
+      if(i < 88 && !isRightEdge && squares[i+1 + width].classList.contains('bomb')) total++;
+      if(i < 89 && squares[i + width].classList.contains('bomb')) total++;
+      squares[i].setAttribute('data', total);
+      console.log(squares[i]);
+    }
   }
 
 }
