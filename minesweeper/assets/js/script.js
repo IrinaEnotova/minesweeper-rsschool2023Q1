@@ -48,6 +48,7 @@ const field = createElement('div', '.main', 'game-field');
 let width = 10;
 let bombAmount = 20;
 let squares = [];
+let isGameOver = false;
 
 function createBoard() {
   // create bombs and valid cells
@@ -102,6 +103,75 @@ function createBoard() {
 }
 
 createBoard();
+
+function click(square) {
+  let currentId = square.id;
+  if(isGameOver) return;
+  if(square.classList.contains('checked') || square.classList.contains('flag')) return;
+  if(square.classList.contains('bomb')) {
+    // сделать вывод окна с завершением игры
+    alert('Game over');
+  } else {
+    let total = square.getAttribute('data');
+    if(total != 0) {
+      square.classList.add('checked');
+      square.innerHTML = total;
+      return
+    }
+    // сначала проверяем ячейки по соседству
+    checkSquare(square, currentId);
+  }
+  square.classList.add('checked');
+}
+
+// функция для проверки соседей с помощью рекурсии
+function checkSquare(square, currentId) {
+  const isLeftEdge = currentId % width === 0;
+  const isRightEdge = currentId % width === width - 1;
+
+  setTimeout(() => {
+    if(currentId > 0 && !isLeftEdge) {
+      const newId = squares[parseInt(currentId) - 1].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId > 9 && !isRightEdge) {
+      const newId = squares[parseInt(currentId) + 1 - width].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId > 10) {
+      const newId = squares[parseInt(currentId - width)].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId > 11 && !isLeftEdge) {
+      const newId = squares[parseInt(currentId) - 1 - width].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId < 98 && !isRightEdge) {
+      const newId = squares[parseInt(currentId) + 1].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId < 90 && !isLeftEdge) {
+      const newId = squares[parseInt(currentId) - 1 + width].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId < 88 && !isRightEdge) {
+      const newId = squares[parseInt(currentId) + 1 + width].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+    if(currentId < 89) {
+      const newId = squares[parseInt(currentId) + width].id;
+      const newSquare = document.getElementById(newId);
+      click(newSquare);
+    }
+  }, 10)
+}
 
 
 // EVENTS

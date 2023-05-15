@@ -109,3 +109,8 @@
   background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;
   background-size: 30px;
 }
+
+.checked {
+  background-color: #3B2A00;
+  color: white
+}
