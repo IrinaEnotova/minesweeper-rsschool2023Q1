@@ -4,13 +4,14 @@
 
 const sidebar = document.createElement('aside'),
       main = document.createElement('main'),
+      infoPanel = document.createElement('div'),
       modal = document.createElement('div');
 
 document.body.classList.add('wrapper');
 sidebar.classList.add('sidebar');
 main.classList.add('main');
+infoPanel.classList.add('info-panel');
 modal.classList.add('modal');
-// modal.classList.add('hidden');
 modal.innerHTML = `
 <div class="modal-container">
   <h2 class="modal-heading">Модальное окно</h2>
@@ -18,6 +19,7 @@ modal.innerHTML = `
 `;
 
 document.body.append(sidebar);
+document.body.append(infoPanel);
 document.body.append(main);
 document.body.append(modal);
 
@@ -25,7 +27,7 @@ document.body.append(modal);
 
 function createElement(tagName, parentSelector, classes) {
   const element = document.createElement(tagName);
-  console.log(element);
+  // console.log(element);
   element.className = classes;
   document.querySelector(parentSelector).append(element);
 
@@ -38,13 +40,23 @@ const welcome = createElement('h1', '.sidebar', 'main-heading');
 const startBtn = createElement('button', '.sidebar', 'start-btn btn');
 startBtn.textContent = 'New game';
 
-const levels = createElement('div', '.sidebar', 'levels-container hidden'),
+const levels = createElement('div', '.sidebar', 'levels-container'),
       levelHeading = createElement('h2', '.levels-container', 'add-heading'),
       btnsContainer = createElement('div', '.levels-container', 'btns-container'),
       easyLevelBtn = createElement('button', '.btns-container', 'level-btn easy-level btn'),
       mediumLevelBtn = createElement('button', '.btns-container', 'level-btn medium-level btn'),
       hardLevelBtn = createElement('button', '.btns-container', 'level-btn hard-level btn');
 const levelBtns = [];
+
+const timerContainer = createElement('div', '.info-panel', 'timer-container'),
+      timerTitle = createElement('div', '.timer-container', 'panel-title'),
+      timerValue = createElement('div', '.timer-container', 'timer-value'),
+      minutes = createElement('div', '.timer-value', 'minutes'),
+      seconds = createElement('div', '.timer-value', 'seconds');
+
+const numberOfClicks = createElement('div', '.info-panel', 'clicks-container'),
+      clickTitle = createElement('div', '.clicks-container', 'panel-title'),
+      clickValue = createElement('div', '.clicks-container', 'clicks');
 
 levelHeading.textContent = 'Difficulty';
 easyLevelBtn.textContent = 'Easy 10x10';
@@ -53,6 +65,28 @@ mediumLevelBtn.textContent = 'Medium 15x15';
 levelBtns.push(mediumLevelBtn);
 hardLevelBtn.textContent = 'Hard 25x25';
 levelBtns.push(hardLevelBtn);
+
+timerTitle.textContent = 'Time:';
+clickTitle.textContent = 'Moves:';
+minutes.textContent = '00:';
+seconds.textContent = '00';
+clickValue.textContent = '0';
+
+// TIMER AND CLICKS 
+let timer = 0;
+let timerInterval;
+
+function setStopwatch() {
+  timerInterval = setInterval(function() {
+    timer += 1;
+    let secondVal = Math.floor(timer) - Math.floor(timer/60) * 60;
+    let minuteVal = Math.floor(timer/60);
+    seconds.innerHTML = secondVal < 10 ? "0" + secondVal : secondVal;
+    minutes.innerHTML = minuteVal < 10 ? "0" + minuteVal + ':': minuteVal + ':';
+    }, 1000);
+}
+
+setStopwatch();
 
 // MAIN WINDOW
 
@@ -81,9 +115,9 @@ function createBoard() {
   // random position for bombs
   const gameArray = [...emptyArray, ...bombsArray];
   closedSquares = [...emptyArray, ...bombsArray];
-  console.log(gameArray);
+  // console.log(gameArray);
   const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
-  console.log(shuffledArray);
+  // console.log(shuffledArray);
 
 
   for(let i = 0; i < width*width; i++) {
@@ -125,10 +159,9 @@ function createBoard() {
       if(i < 88 && !isRightEdge && squares[i+1 + width].classList.contains('bomb')) total++;
       if(i < 89 && squares[i + width].classList.contains('bomb')) total++;
       squares[i].setAttribute('data', total);
-      console.log(squares[i]);
+      // console.log(squares[i]);
     }
   }
-
 }
 
 function removeSquares() {
@@ -165,7 +198,7 @@ function click(square) {
       closedSquares.push(item);
     }
   })
-  console.log(closedSquares);
+  // console.log(closedSquares);
   checkForWin();
   
   if(square.classList.contains('checked') || square.classList.contains('flag')) return;
@@ -244,6 +277,7 @@ function checkSquare(square, currentId) {
 
 // game over
 function gameOver(square) {
+  clearInterval(timerInterval);
   audioBoom.play();
   isGameOver = true;
   modal.innerHTML = `
@@ -310,4 +344,10 @@ window.addEventListener('click', function(event) {
   if (event.target == modal) { 
       modal.classList.remove('active-modal'); 
   } 
+})
+
+squares.forEach(square => {
+  square.addEventListener('click', () => {
+    clickValue.textContent = +clickValue.textContent + 1;
+  })
 })
