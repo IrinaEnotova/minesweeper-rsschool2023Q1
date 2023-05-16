@@ -35,11 +35,15 @@ const levels = createElement('div', '.sidebar', 'levels-container hidden'),
       easyLevelBtn = createElement('button', '.btns-container', 'level-btn easy-level btn'),
       mediumLevelBtn = createElement('button', '.btns-container', 'level-btn medium-level btn'),
       hardLevelBtn = createElement('button', '.btns-container', 'level-btn hard-level btn');
+const levelBtns = [];
 
 levelHeading.textContent = 'Difficulty';
 easyLevelBtn.textContent = 'Easy 10x10';
+levelBtns.push(easyLevelBtn);
 mediumLevelBtn.textContent = 'Medium 15x15';
+levelBtns.push(mediumLevelBtn);
 hardLevelBtn.textContent = 'Hard 25x25';
+levelBtns.push(hardLevelBtn);
 
 // MAIN WINDOW
 
@@ -50,6 +54,12 @@ let bombAmount = 20;
 let flags = 0;
 let squares = [];
 let isGameOver = false;
+
+const audioDig = new Audio('assets/audio/shovel-dig.mp3');
+const audioBoom = new Audio('assets/audio/boom.mp3');
+const audioFlag = new Audio('assets/audio/flag.mp3');
+const audioClick = new Audio('assets/audio/click.mp3');
+const audioWin = new Audio('assets/audio/win.mp3');
 
 function createBoard() {
   // create bombs and valid cells
@@ -116,11 +126,13 @@ function addFlag(square) {
   if(isGameOver) return;
   if(!square.classList.contains('checked') && flags < bombAmount) {
     if(!square.classList.contains('flag')) {
+      audioFlag.play();
       square.classList.add('flag');
       console.log('!')
       // DELETE
       square.innerHTML = 'Flag';
       flags++;
+      checkForWin();
     } else {
       square.classList.remove('flag');
       square.innerHTML = '';
@@ -137,6 +149,7 @@ function click(square) {
     // сделать вывод окна с завершением игры
     gameOver(square);
   } else {
+    audioDig.play();
     let total = square.getAttribute('data');
     if(total != 0) {
       square.classList.add('checked');
@@ -201,6 +214,7 @@ function checkSquare(square, currentId) {
 // game over
 function gameOver(square) {
   console.log('BOOM! Game over!');
+  audioBoom.play();
   isGameOver = true;
 
   // show ALL bombs in the end
@@ -211,8 +225,31 @@ function gameOver(square) {
   })
 }
 
+// check for win
+function checkForWin() {
+  let matches = 0;
+
+  for(let i = 0; i < squares.length; i++) {
+    if(squares[i].classList.contains('flag') && squares[i].classList.contains('bomb')) {
+      matches++;
+    }
+    if(matches === bombAmount) {
+      console.log('You win!');
+      audioWin.play();
+      isGameOver = true;
+    }
+  }
+}
+
 // EVENTS
 
 startBtn.addEventListener('click', () => {
+  audioClick.play();
   levels.classList.toggle('hidden');
 });
+
+levelBtns.forEach(btn => {
+  btn.addEventListener('click', () => {
+    audioClick.play();
+  })
+})
