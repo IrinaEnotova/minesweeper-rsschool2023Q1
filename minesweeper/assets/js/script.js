@@ -3,14 +3,23 @@
 // COMMON
 
 const sidebar = document.createElement('aside'),
-      main = document.createElement('main');
+      main = document.createElement('main'),
+      modal = document.createElement('div');
 
 document.body.classList.add('wrapper');
 sidebar.classList.add('sidebar');
 main.classList.add('main');
+modal.classList.add('modal');
+// modal.classList.add('hidden');
+modal.innerHTML = `
+<div class="modal-container">
+  <h2 class="modal-heading">Модальное окно</h2>
+</div>
+`;
 
 document.body.append(sidebar);
 document.body.append(main);
+document.body.append(modal);
 
 // SIDEBAR
 
@@ -83,6 +92,7 @@ function createBoard() {
     // присваеваем ячейкам класс, соответствующий номеру в перемешанном массиве
     square.classList.add(shuffledArray[i]);
     square.classList.add('cell');
+    square.classList.add('hidden-square');
     field.append(square);
     squares.push(square);
 
@@ -127,7 +137,7 @@ function removeSquares() {
   })
 }
 
-// createBoard();
+createBoard();
 
 // add flag with right click
 function addFlag(square) {
@@ -136,14 +146,10 @@ function addFlag(square) {
     if(!square.classList.contains('flag')) {
       audioFlag.play();
       square.classList.add('flag');
-      console.log('!')
-      // DELETE
-      square.innerHTML = 'Flag';
       flags++;
       checkForWin();
     } else {
       square.classList.remove('flag');
-      square.innerHTML = '';
       flags--;
     }
   }
@@ -152,7 +158,7 @@ function addFlag(square) {
 function click(square) {
   let currentId = square.id;
   if(isGameOver) return;
-  
+
   closedSquares = [];
   squares.forEach(item => {
     if(!item.classList.contains('checked')) {
@@ -164,7 +170,6 @@ function click(square) {
   
   if(square.classList.contains('checked') || square.classList.contains('flag')) return;
   if(square.classList.contains('bomb')) {
-    // сделать вывод окна с завершением игры
     gameOver(square);
   } else {
     audioDig.play();
@@ -239,14 +244,19 @@ function checkSquare(square, currentId) {
 
 // game over
 function gameOver(square) {
-  console.log('BOOM! Game over!');
   audioBoom.play();
   isGameOver = true;
-
+  modal.innerHTML = `
+  <div class="modal-container">
+    <h2 class="modal-heading">Game over!</h2>
+  </div>
+  `;
+  modal.classList.add('active-modal');
   // show ALL bombs in the end
   squares.forEach(square => {
     if(square.classList.contains('bomb')) {
-      square.innerHTML = '!';
+      // square.innerHTML = '!';
+      square.classList.add('bomb-img');
     }
   })
 }
@@ -260,12 +270,22 @@ function checkForWin() {
       matches++;
     }
     if(matches === bombAmount) {
-      console.log('You win!');
+      modal.innerHTML = `
+      <div class="modal-container">
+        <h2 class="modal-heading">You win!</h2>
+      </div>
+      `;
+      modal.classList.add('active-modal');
       audioWin.play();
       isGameOver = true;
     }
     if(closedSquares.length - 1 === bombAmount) {
-      // console.log('You win!');
+      modal.innerHTML = `
+      <div class="modal-container">
+        <h2 class="modal-heading">You win!</h2>
+      </div>
+      `;
+      modal.classList.add('active-modal');
       audioWin.play();
       isGameOver = true;
     }
@@ -275,8 +295,7 @@ function checkForWin() {
 // EVENTS
 
 startBtn.addEventListener('click', () => {
-  removeSquares();
-  createBoard();
+  location.reload();
   audioClick.play();
   levels.classList.toggle('hidden');
 });
@@ -285,4 +304,10 @@ levelBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     audioClick.play();
   })
+})
+
+window.addEventListener('click', function(event) { 
+  if (event.target == modal) { 
+      modal.classList.remove('active-modal'); 
+  } 
 })

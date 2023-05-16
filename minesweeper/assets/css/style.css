@@ -36,6 +36,35 @@
   justify-content: center;
 }
 
+.modal { 
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  left: 0; 
+  top: 0; 
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+}
+
+.active-modal {
+  display: flex;
+}
+
+.modal-container { 
+  background-color: #FAFAFA; 
+  color: #1F1F1F; 
+  max-width: 300px; 
+  height: fit-content; 
+  margin: 55% auto; 
+  padding: 32px; 
+  border-radius: 9px; 
+  display: flex; 
+  flex-direction: column; 
+}
+
 .main-heading {
   text-align: center;
 }
@@ -87,8 +116,6 @@
   padding: 10px 25px;
 }
 
-
-
 /* MAIN */
 
 .game-field {
@@ -110,12 +137,17 @@
   cursor: pointer;
 }
 
-.hidden {
-  background-color: red;
+.hidden-square {
+  background-color: #C7B814;
   border: 1px solid #3B2A00
 }
 
 .bomb {
+  background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;
+  background-size: 30px;
+}
+
+.bomb-img {
   background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;
   background-size: 30px;
 }
