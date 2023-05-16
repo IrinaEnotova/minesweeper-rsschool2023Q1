@@ -110,7 +110,7 @@ function click(square) {
   if(square.classList.contains('checked') || square.classList.contains('flag')) return;
   if(square.classList.contains('bomb')) {
     // сделать вывод окна с завершением игры
-    alert('Game over');
+    gameOver(square);
   } else {
     let total = square.getAttribute('data');
     if(total != 0) {
@@ -173,6 +173,18 @@ function checkSquare(square, currentId) {
   }, 10)
 }
 
+// game over
+function gameOver(square) {
+  console.log('BOOM! Game over!');
+  isGameOver = true;
+
+  // show ALL bombs in the end
+  squares.forEach(square => {
+    if(square.classList.contains('bomb')) {
+      square.innerHTML = '!';
+    }
+  })
+}
 
 // EVENTS
 
