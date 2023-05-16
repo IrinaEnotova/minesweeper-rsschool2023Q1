@@ -110,6 +110,11 @@
   background-size: 30px;
 }
 
+.flag {
+  background: url('../img/flag.png') center center no-repeat;
+  background-size: 30px;
+}
+
 .checked {
   background-color: #3B2A00;
   color: white

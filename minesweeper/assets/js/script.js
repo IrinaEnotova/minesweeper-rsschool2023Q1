@@ -47,6 +47,7 @@ const field = createElement('div', '.main', 'game-field');
 // for easy mode 10x10
 let width = 10;
 let bombAmount = 20;
+let flags = 0;
 let squares = [];
 let isGameOver = false;
 
@@ -77,6 +78,12 @@ function createBoard() {
     square.addEventListener('click', () => {
       click(square);
     })
+
+    // left click
+    square.oncontextmenu = function(event) {
+      event.preventDefault();
+      addFlag(square);
+    }
   }
 
   // add numbers
@@ -103,6 +110,24 @@ function createBoard() {
 }
 
 createBoard();
+
+// add flag with right click
+function addFlag(square) {
+  if(isGameOver) return;
+  if(!square.classList.contains('checked') && flags < bombAmount) {
+    if(!square.classList.contains('flag')) {
+      square.classList.add('flag');
+      console.log('!')
+      // DELETE
+      square.innerHTML = 'Flag';
+      flags++;
+    } else {
+      square.classList.remove('flag');
+      square.innerHTML = '';
+      flags--;
+    }
+  }
+}
 
 function click(square) {
   let currentId = square.id;
