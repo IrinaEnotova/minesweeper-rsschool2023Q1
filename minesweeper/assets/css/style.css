@@ -12,14 +12,17 @@
 
 .wrapper {
   display: flex;
+  flex-direction: column;
   height: 100vh;
 }
 
 .sidebar {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  /* flex-direction: column; */
   min-width: 250px;
-  height: 100%;
+  /* height: 100%; */
   background: url('../img/sidebar-back.jpg') repeat;
   background-size: 50%;
 }
@@ -53,6 +56,7 @@
 }
 
 .start-btn {
+  height: fit-content;
   font-size: 20px;
   margin: 0 auto;
   padding: 10px 25px;
@@ -99,10 +103,16 @@
   width: 40px;
   height: 40px;
   border: 1px solid #3B2A00;
+  /* background-color: #C7B814; */
 }
 
 .cell {
   cursor: pointer;
+}
+
+.hidden {
+  background-color: red;
+  border: 1px solid #3B2A00
 }
 
 .bomb {
@@ -117,5 +127,41 @@
 
 .checked {
   background-color: #3B2A00;
-  color: white
+  color: white;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.one {
+  color: #F5C764;
+}
+
+.two {
+  color: #FF7669;
+}
+
+.three {
+ color: #AB6BE8;
+}
+
+.four {
+  color: #6ECDFF;
+}
+
+.five {
+  color: #64F579;
+}
+
+.six {
+  color: #470AEB;
+}
+
+.seven {
+  color: #D40226;
+}
+
+.eight {
+  color: #EA0A92;
 }

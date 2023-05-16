@@ -24,7 +24,7 @@ function createElement(tagName, parentSelector, classes) {
 }
 
 const welcome = createElement('h1', '.sidebar', 'main-heading');
-welcome.textContent = "Minesweeper";
+// welcome.textContent = "Minesweeper";
 
 const startBtn = createElement('button', '.sidebar', 'start-btn btn');
 startBtn.textContent = 'New game';
@@ -50,9 +50,10 @@ levelBtns.push(hardLevelBtn);
 const field = createElement('div', '.main', 'game-field');
 // for easy mode 10x10
 let width = 10;
-let bombAmount = 20;
+let bombAmount = 10;
 let flags = 0;
 let squares = [];
+let closedSquares = [];
 let isGameOver = false;
 
 const audioDig = new Audio('assets/audio/shovel-dig.mp3');
@@ -70,6 +71,7 @@ function createBoard() {
 
   // random position for bombs
   const gameArray = [...emptyArray, ...bombsArray];
+  closedSquares = [...emptyArray, ...bombsArray];
   console.log(gameArray);
   const shuffledArray = gameArray.sort(() => Math.random() - 0.5);
   console.log(shuffledArray);
@@ -80,7 +82,7 @@ function createBoard() {
     square.setAttribute('id', i);
     // присваеваем ячейкам класс, соответствующий номеру в перемешанном массиве
     square.classList.add(shuffledArray[i]);
-    square.classList.add('cell')
+    square.classList.add('cell');
     field.append(square);
     squares.push(square);
 
@@ -119,7 +121,13 @@ function createBoard() {
 
 }
 
-createBoard();
+function removeSquares() {
+  squares.forEach(square => {
+    square.remove();
+  })
+}
+
+// createBoard();
 
 // add flag with right click
 function addFlag(square) {
@@ -144,6 +152,16 @@ function addFlag(square) {
 function click(square) {
   let currentId = square.id;
   if(isGameOver) return;
+  
+  closedSquares = [];
+  squares.forEach(item => {
+    if(!item.classList.contains('checked')) {
+      closedSquares.push(item);
+    }
+  })
+  console.log(closedSquares);
+  checkForWin();
+  
   if(square.classList.contains('checked') || square.classList.contains('flag')) return;
   if(square.classList.contains('bomb')) {
     // сделать вывод окна с завершением игры
@@ -153,6 +171,14 @@ function click(square) {
     let total = square.getAttribute('data');
     if(total != 0) {
       square.classList.add('checked');
+      if (total == 1) square.classList.add('one');
+      if (total == 2) square.classList.add('two');
+      if (total == 3) square.classList.add('three');
+      if (total == 4) square.classList.add('four');
+      if (total == 5) square.classList.add('five');
+      if (total == 6) square.classList.add('six');
+      if (total == 7) square.classList.add('seven');
+      if (total == 8) square.classList.add('eight');
       square.innerHTML = total;
       return
     }
@@ -179,7 +205,7 @@ function checkSquare(square, currentId) {
       click(newSquare);
     }
     if(currentId > 10) {
-      const newId = squares[parseInt(currentId - width)].id;
+      const newId = squares[parseInt(currentId) - width].id;
       const newSquare = document.getElementById(newId);
       click(newSquare);
     }
@@ -238,12 +264,19 @@ function checkForWin() {
       audioWin.play();
       isGameOver = true;
     }
+    if(closedSquares.length - 1 === bombAmount) {
+      // console.log('You win!');
+      audioWin.play();
+      isGameOver = true;
+    }
   }
 }
 
 // EVENTS
 
 startBtn.addEventListener('click', () => {
+  removeSquares();
+  createBoard();
   audioClick.play();
   levels.classList.toggle('hidden');
 });
