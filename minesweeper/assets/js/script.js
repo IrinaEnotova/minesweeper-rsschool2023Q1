@@ -485,10 +485,8 @@ themeContainer.addEventListener('click', () => {
   }
 })
 
-results.addEventListener('click', () => {
-  resultsModal.classList.toggle('active-modal');
-  let resultArr = localStorage.getItem('results').split(';');
-  console.log(resultArr);
+let resultArr = localStorage.getItem('results').split(';');
+  // console.log(resultArr);
   resultArr.forEach((result, i) => {
     if(i < resultArr.length - 1) {
       let element = document.createElement('div');
@@ -497,6 +495,9 @@ results.addEventListener('click', () => {
       document.querySelector('.modal-results-container').append(element);
     }
   })
+
+results.addEventListener('click', () => {
+  resultsModal.classList.toggle('active-modal');
 })
 
 window.addEventListener('unload', () => {
