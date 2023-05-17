@@ -278,6 +278,9 @@ function checkSquare(square, currentId) {
 // game over
 function gameOver(square) {
   clearInterval(timerInterval);
+  squares.forEach(square => {
+    square.removeEventListener('click', addMoves)
+  })
   audioBoom.play();
   isGameOver = true;
   modal.innerHTML = `
@@ -311,6 +314,10 @@ function checkForWin() {
       `;
       modal.classList.add('active-modal');
       audioWin.play();
+      clearInterval(timerInterval);
+      squares.forEach(square => {
+        square.removeEventListener('click', addMoves)
+      })
       isGameOver = true;
     }
     if(closedSquares.length - 1 === bombAmount) {
@@ -321,6 +328,10 @@ function checkForWin() {
       `;
       modal.classList.add('active-modal');
       audioWin.play();
+      clearInterval(timerInterval);
+      squares.forEach(square => {
+        square.removeEventListener('click', addMoves)
+      })
       isGameOver = true;
     }
   }
@@ -331,7 +342,7 @@ function checkForWin() {
 startBtn.addEventListener('click', () => {
   location.reload();
   audioClick.play();
-  levels.classList.toggle('hidden');
+  // levels.classList.toggle('hidden');
 });
 
 levelBtns.forEach(btn => {
@@ -347,7 +358,9 @@ window.addEventListener('click', function(event) {
 })
 
 squares.forEach(square => {
-  square.addEventListener('click', () => {
-    clickValue.textContent = +clickValue.textContent + 1;
-  })
+  square.addEventListener('click', addMoves)
 })
+
+function addMoves() {
+  clickValue.textContent = +clickValue.textContent + 1;
+}
