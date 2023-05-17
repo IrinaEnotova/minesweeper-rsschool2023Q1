@@ -5,7 +5,8 @@
 const sidebar = document.createElement('aside'),
       main = document.createElement('main'),
       infoPanel = document.createElement('div'),
-      modal = document.createElement('div');
+      modal = document.createElement('div'),
+      resultsModal = document.createElement('div');
 
 document.body.classList.add('wrapper');
 sidebar.classList.add('sidebar');
@@ -17,11 +18,19 @@ modal.innerHTML = `
   <h2 class="modal-heading">Модальное окно</h2>
 </div>
 `;
+resultsModal.classList.add('modal-results');
+resultsModal.innerHTML = `
+<div class="modal-results-container">
+  <h2 class="modal-heading">Results</h2>
+</div>
+`;
+
 
 document.body.append(sidebar);
 document.body.append(infoPanel);
 document.body.append(main);
 document.body.append(modal);
+document.body.append(resultsModal);
 
 // SIDEBAR
 
@@ -88,6 +97,10 @@ if(localStorage.getItem('theme') === 'dark') {
   themeImg.src = 'assets/img/light.svg';
 }
 
+const results = createElement('div', '.main', 'results-container'),
+      resultsImg = createElement('img', '.results-container', 'results-img');
+resultsImg.src = 'assets/img/medal.png';
+
 // TIMER AND CLICKS 
 let timer = 0;
 let timerInterval;
@@ -114,6 +127,7 @@ let flags = 0;
 let squares = [];
 let closedSquares = [];
 let isGameOver = false;
+let isWin = false;
 
 const audioDig = new Audio('assets/audio/shovel-dig.mp3');
 const audioBoom = new Audio('assets/audio/boom.mp3');
@@ -122,9 +136,11 @@ const audioClick = new Audio('assets/audio/click.mp3');
 const audioWin = new Audio('assets/audio/win.mp3');
 let sound = localStorage.getItem('sound') ? localStorage.getItem('sound') : 'true';
 let theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light';
+let latestResults = localStorage.getItem('results') ? localStorage.getItem('results') : ' ';
 
 localStorage.setItem('sound', sound);
 localStorage.setItem('theme', theme);
+localStorage.setItem('results', latestResults);
 
 function createBoard() {
   // create bombs and valid cells
@@ -325,6 +341,9 @@ function gameOver(square) {
   })
 }
 
+let oldResults = localStorage.getItem('results');
+let currentResult;
+
 // check for win
 function checkForWin() {
   let matches = 0;
@@ -346,8 +365,11 @@ function checkForWin() {
       clearInterval(timerInterval);
       squares.forEach(square => {
         square.removeEventListener('click', addMoves)
-      })
+      });
+      isWin = true;
       isGameOver = true;
+
+      
     }
     if(closedSquares.length - 1 === bombAmount) {
       modal.innerHTML = `
@@ -363,7 +385,10 @@ function checkForWin() {
       squares.forEach(square => {
         square.removeEventListener('click', addMoves)
       })
+      isWin = true;
       isGameOver = true;
+
+      currentResult = `Time ${minutes.textContent}${seconds.textContent} and ${clickValue.textContent} moves;\n`;
     }
   }
 }
@@ -389,6 +414,9 @@ window.addEventListener('click', function(event) {
   if (event.target == modal) { 
       modal.classList.remove('active-modal'); 
   } 
+  if (event.target == resultsModal) { 
+    resultsModal.classList.remove('active-modal'); 
+} 
 })
 
 squares.forEach(square => {
@@ -457,6 +485,24 @@ themeContainer.addEventListener('click', () => {
   }
 })
 
+results.addEventListener('click', () => {
+  resultsModal.classList.toggle('active-modal');
+  let resultArr = localStorage.getItem('results').split(';');
+  console.log(resultArr);
+  resultArr.forEach((result, i) => {
+    if(i < resultArr.length - 1) {
+      let element = document.createElement('div');
+      element.classList.add('result-text');
+      element.textContent = `${i+1}.${result}`;
+      document.querySelector('.modal-results-container').append(element);
+    }
+  })
+})
+
 window.addEventListener('unload', () => {
   localStorage.setItem('sound', sound);
+  if(isWin) {
+    let storageResult = oldResults + currentResult;
+    localStorage.setItem('results', storageResult);
+  }
 })
