@@ -80,6 +80,14 @@ if(localStorage.getItem('sound') === 'true') {
   soundImg.src = 'assets/img/mute.png';
 }
 
+const themeContainer = createElement('div', '.main', 'theme-container'),
+      themeImg = createElement('img', '.theme-container', 'theme-img');
+if(localStorage.getItem('theme') === 'dark') {
+  themeImg.src = 'assets/img/dark.svg';
+} else if(localStorage.getItem('theme') === 'light') {
+  themeImg.src = 'assets/img/light.svg';
+}
+
 // TIMER AND CLICKS 
 let timer = 0;
 let timerInterval;
@@ -113,8 +121,10 @@ const audioFlag = new Audio('assets/audio/flag.mp3');
 const audioClick = new Audio('assets/audio/click.mp3');
 const audioWin = new Audio('assets/audio/win.mp3');
 let sound = localStorage.getItem('sound') ? localStorage.getItem('sound') : 'true';
+let theme = localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light';
 
 localStorage.setItem('sound', sound);
+localStorage.setItem('theme', theme);
 
 function createBoard() {
   // create bombs and valid cells
@@ -396,6 +406,54 @@ soundContainer.addEventListener('click', () => {
   } else {
     sound = 'true';
     soundImg.src = 'assets/img/sound-on.png';
+  }
+})
+
+themeContainer.addEventListener('click', () => {
+  if(theme === 'light') {
+    theme = 'dark';
+
+    sidebar.classList.add('dark-sidebar');
+    startBtn.classList.add('dark-btn');
+    levelBtns.forEach(btn => {
+      btn.classList.add('dark-btn');
+    })
+    levels.classList.add('dark-levels-container');
+    levelHeading.classList.add('dark-heading');
+    infoPanel.classList.add('dark-btn');
+    timerTitle.classList.add('dark-btn');
+    minutes.classList.add('dark-btn');
+    seconds.classList.add('dark-btn');
+    clickTitle.classList.add('dark-btn');
+    clickValue.classList.add('dark-btn');
+    main.classList.add('dark-main');
+    squares.forEach(square => {
+      square.classList.add('dark-hidden-square');
+    });
+
+    themeImg.src = 'assets/img/dark.svg';
+  } else {
+    theme = 'light';
+
+    sidebar.classList.remove('dark-sidebar');
+    startBtn.classList.remove('dark-btn');
+    levelBtns.forEach(btn => {
+      btn.classList.remove('dark-btn');
+    })
+    levels.classList.remove('dark-levels-container');
+    levelHeading.classList.remove('dark-heading');
+    infoPanel.classList.remove('dark-btn');
+    timerTitle.classList.remove('dark-btn');
+    minutes.classList.remove('dark-btn');
+    seconds.classList.remove('dark-btn');
+    clickTitle.classList.remove('dark-btn');
+    clickValue.classList.remove('dark-btn');
+    main.classList.remove('dark-main');
+    squares.forEach(square => {
+      square.classList.remove('dark-hidden-square');
+    });
+
+    themeImg.src = 'assets/img/light.svg';
   }
 })
 
