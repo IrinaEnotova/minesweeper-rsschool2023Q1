@@ -72,6 +72,14 @@ minutes.textContent = '00:';
 seconds.textContent = '00';
 clickValue.textContent = '0';
 
+const soundContainer = createElement('div', '.main', 'sound-container'),
+      soundImg = createElement('img', '.sound-container', 'sound-img');
+if(localStorage.getItem('sound') === 'true') {
+  soundImg.src = 'assets/img/sound-on.png';
+} else if(localStorage.getItem('sound') === 'false') {
+  soundImg.src = 'assets/img/mute.png';
+}
+
 // TIMER AND CLICKS 
 let timer = 0;
 let timerInterval;
@@ -104,6 +112,9 @@ const audioBoom = new Audio('assets/audio/boom.mp3');
 const audioFlag = new Audio('assets/audio/flag.mp3');
 const audioClick = new Audio('assets/audio/click.mp3');
 const audioWin = new Audio('assets/audio/win.mp3');
+let sound = localStorage.getItem('sound') ? localStorage.getItem('sound') : 'true';
+
+localStorage.setItem('sound', sound);
 
 function createBoard() {
   // create bombs and valid cells
@@ -177,7 +188,9 @@ function addFlag(square) {
   if(isGameOver) return;
   if(!square.classList.contains('checked') && flags < bombAmount) {
     if(!square.classList.contains('flag')) {
-      audioFlag.play();
+      if(sound === 'true') {
+        audioFlag.play();
+      }
       square.classList.add('flag');
       flags++;
       checkForWin();
@@ -205,7 +218,9 @@ function click(square) {
   if(square.classList.contains('bomb')) {
     gameOver(square);
   } else {
-    audioDig.play();
+    if(sound === 'true') {
+      audioDig.play();
+    }
     let total = square.getAttribute('data');
     if(total != 0) {
       square.classList.add('checked');
@@ -281,7 +296,9 @@ function gameOver(square) {
   squares.forEach(square => {
     square.removeEventListener('click', addMoves)
   })
-  audioBoom.play();
+  if(sound === 'true') {
+    audioBoom.play();
+  }
   isGameOver = true;
   modal.innerHTML = `
   <div class="modal-container">
@@ -313,7 +330,9 @@ function checkForWin() {
       </div>
       `;
       modal.classList.add('active-modal');
-      audioWin.play();
+      if(sound === 'true') {
+        audioWin.play();
+      }
       clearInterval(timerInterval);
       squares.forEach(square => {
         square.removeEventListener('click', addMoves)
@@ -327,7 +346,9 @@ function checkForWin() {
       </div>
       `;
       modal.classList.add('active-modal');
-      audioWin.play();
+      if(sound === 'true') {
+        audioWin.play();
+      }
       clearInterval(timerInterval);
       squares.forEach(square => {
         square.removeEventListener('click', addMoves)
@@ -341,13 +362,16 @@ function checkForWin() {
 
 startBtn.addEventListener('click', () => {
   location.reload();
-  audioClick.play();
-  // levels.classList.toggle('hidden');
+  if(sound === 'true') {
+    audioClick.play();
+  }
 });
 
 levelBtns.forEach(btn => {
   btn.addEventListener('click', () => {
-    audioClick.play();
+    if(sound === 'true') {
+      audioClick.play();
+    }
   })
 })
 
@@ -364,3 +388,17 @@ squares.forEach(square => {
 function addMoves() {
   clickValue.textContent = +clickValue.textContent + 1;
 }
+
+soundContainer.addEventListener('click', () => {
+  if(sound === 'true') {
+    sound = 'false';
+    soundImg.src = 'assets/img/mute.png';
+  } else {
+    sound = 'true';
+    soundImg.src = 'assets/img/sound-on.png';
+  }
+})
+
+window.addEventListener('unload', () => {
+  localStorage.setItem('sound', sound);
+})
