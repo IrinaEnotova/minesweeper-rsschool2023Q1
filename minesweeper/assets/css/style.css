@@ -168,10 +168,10 @@
   border: 1px solid #3B2A00
 }
 
-.bomb {
+/* .bomb {
   background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;
   background-size: 30px;
-}
+} */
 
 .bomb-img {
   background: url('../img/bomb-icon.png') center center no-repeat, #3B2A00;

@@ -87,6 +87,8 @@ if(localStorage.getItem('sound') === 'true') {
   soundImg.src = 'assets/img/sound-on.png';
 } else if(localStorage.getItem('sound') === 'false') {
   soundImg.src = 'assets/img/mute.png';
+} else {
+  soundImg.src = 'assets/img/sound-on.png';
 }
 
 const themeContainer = createElement('div', '.main', 'theme-container'),
@@ -94,6 +96,8 @@ const themeContainer = createElement('div', '.main', 'theme-container'),
 if(localStorage.getItem('theme') === 'dark') {
   themeImg.src = 'assets/img/dark.svg';
 } else if(localStorage.getItem('theme') === 'light') {
+  themeImg.src = 'assets/img/light.svg';
+} else {
   themeImg.src = 'assets/img/light.svg';
 }
 
@@ -486,15 +490,15 @@ themeContainer.addEventListener('click', () => {
 })
 
 let resultArr = localStorage.getItem('results').split(';');
-  // console.log(resultArr);
-  resultArr.forEach((result, i) => {
-    if(i < resultArr.length - 1) {
-      let element = document.createElement('div');
-      element.classList.add('result-text');
-      element.textContent = `${i+1}.${result}`;
-      document.querySelector('.modal-results-container').append(element);
-    }
-  })
+// console.log(resultArr);
+resultArr.forEach((result, i) => {
+  if(i < resultArr.length - 1) {
+    let element = document.createElement('div');
+    element.classList.add('result-text');
+    element.textContent = `${i+1}.${result}`;
+    document.querySelector('.modal-results-container').append(element);
+  }
+})
 
 results.addEventListener('click', () => {
   resultsModal.classList.toggle('active-modal');
